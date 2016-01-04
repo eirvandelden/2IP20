@@ -1,0 +1,695 @@
+unit Base;
+  { Basic definitions for puzzle program }
+  { version 5 }
+//# BEGIN TODO author name, id.nr., date for unit header
+  Replace this line by your text.
+//# END TODO
+
+interface
+  uses Contnrs, Graphics;
+
+
+// Positions --------------------------------------------------------------
+// A Position is a pair (Row, Col) of coordinates.
+// A PositionList is a sequence of Position.
+
+type
+  TPosition =
+  record
+    Row: Integer;
+    Col: Integer;
+  end;
+
+  TPositionList = array of TPosition;
+
+
+// Orientations -----------------------------------------------------------
+// A piece can occur in various orientations,
+// as illustrated by the following 'L" piece:
+//
+//   X     XXX   XX      X   XXX    X    X     XX
+//   X     X      X    XXX     X    X    XXX   X
+//   XX           X                XX          X
+//
+// Which orientations are allowed, depends on the kind of puzzle.
+
+// An orientation is a particular constellation of positions.
+// It is characterized by a number of relative positions w.r.t.
+// the origin (0, 0).  Orientations can be freely translated.
+
+type
+  TOrientation =
+  class(TObject)
+  protected
+    FPositionList: TPositionList;
+  public
+    // construction/destruction ---------------------------
+    constructor Create(APositionList: TPositionList);
+    destructor Destroy; override;
+
+    // queries --------------------------------------------
+    function PositionCount: Integer;
+    // pre: true
+    // ret: |Abstr|
+
+    function Position(I: Integer): TPosition;
+    // pre: 0 <= I < PositionCount
+    // ret: Abstr[I]
+
+    function PositionList: TPositionList;
+    // pre: true
+    // ret: Abstr
+    {??? breaks abstraction, but useful. Should perhaps be handled by
+     'friend access' within this unit}
+
+    function MaxRow: Integer;
+    // pre: true
+    // ret: (Max I: 0<=I<|Abstr|: Abstr[I].Row
+
+    function MaxCol: integer;
+    // pre: true
+    // ret: (Max I: 0<=I<|Abstr|: Abstr[I].Col
+
+    // model variables ------------------------------------
+    // Abstr: sequence of TPosition
+
+    // invariants -----------------------------------------
+    // none
+  end;
+
+
+// Pieces -----------------------------------------------------------------
+// A Piece consists of:
+// - a Name
+// - a Color
+// - a Multiplicty (number of unused occurrences)
+// - a set of orientations
+// - OrientationCount : the number of Orientations thus obtained
+// - GetOrientation(I): the I-th Orientation thus obtained, for 0<= I < OrientationCount
+//
+// Contract still to be elaborated <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+type
+  TPiece =
+  class(TObject)
+  protected
+    FName: String;
+    FColor: TColor;
+    FMultiplicity: Integer;
+    FOrientations: TObjectList; // list of FOrientation
+
+  public
+    // construction/destruction ---------------------------
+    constructor Create(const AName: String; AColor: TColor; AMultiplicity: Integer);
+    destructor Destroy; override;
+
+    // queries --------------------------------------------
+    function Name: String;
+    function Color: TColor;
+    function Multiplicity: Integer;
+    function OrientationCount: Integer;
+    function GetOrientation(I: Integer): TOrientation;
+
+    // commands -------------------------------------------
+    procedure AddOrientation(const AOrientation: TOrientation);
+    // pre: AOrientation not in Orientations
+    // effect: Orientations := Orientations ++ [ AOrientation ]
+
+    procedure IncMultiplicity; // "Unuse" a copy of the piece
+    // effect: Multiplicity := Multiplicity + 1
+
+    procedure DecMultiplicity; // Use a copy of the piece
+    // pre: Multiplicity > 0
+    // effect: Multiplicity := Multiplicity - 1
+
+    // invariants ------------------------------------------
+    // Name <> ''
+    // Multiplicity >= 0
+    // Orientations contain no duplicates, and are rotations and/or
+    // reflections of each other
+  end;
+
+
+// BagOfPieces ------------------------------------------------------------
+// A BagOfPieces is a bag of Pieces, i.e. a collection of Pieces
+// where a number of identical copies are available of each Piece.
+
+  TBagOfPieces =
+  class(TObject)
+  protected
+    FName: String;
+    FList: TObjectList; // list of TPiece
+  public
+    // construction/destruction ---------------------------
+    constructor Create(const AName: String);
+    // pre: true
+    // post: Abstr = []
+    destructor Destroy; override;
+
+    // queries --------------------------------------------
+    function Count: Integer;
+    // pre: true
+    // ret: |Abstr|
+
+    function GetPiece(I: Integer): TPiece;
+    // pre: 0 <= I < Count
+    // ret: Abstr[I].FPiece
+
+    function IndexOf(APiece: TPiece): Integer;
+    // pre: true
+    // ret: I such that GetPiece(I) = APiece, or else -1
+
+    function FindPiece(const AName: String): TPiece;
+    // pre: true
+    // ret: Piece such that IndexOf(Piece) <> -1 and Piece.Name = AName
+    //      or else nil
+
+    // commands -------------------------------------------
+    procedure Clear;
+    // pre: true
+    // post: Abstr= []
+
+    procedure AddPiece(APiece: TPiece);
+    // pre: true
+    // effect: Abstr := Abstr ++ [APiece]
+
+    // model variables ------------------------------------
+    // Abstr = sequence of TPiece
+  end;
+
+// Placements ------------------------------------------------------------
+// Contract missing <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+type
+  TPlacement =
+  class(TObject)
+  public
+    FPiece: TPiece;
+    FOrientation: TOrientation;
+    FPosition: TPosition;
+    // invariant: FOrientation is in FPiece.FOrientations
+    constructor Create(APiece: TPiece; AOrientation: TOrientation;
+                       APosition: TPosition);
+  end;
+
+function CoverP(APlacement: TPlacement): TPositionList;
+// pre: true
+// ret: let (Pi, Or, Po) = APlacement
+//        [(Row + Po.Row, Col + Po.Col) | (Row, Col) in Or.PositionList ]
+//
+// Informally: the set of (box) positions covered by placing APlacement
+
+
+// Boxes ------------------------------------------------------------------
+// A Box is a (partially filled) matrix of cells. Each cell is either:
+// - free
+// - blocked
+// - occupied as consequence of a placement (the occuping piece
+//   can be found from the placement)
+
+type
+  TCellState = (csFree, csOccupied, csBlocked);
+
+  TCell =
+  record
+    State: TCellState;
+    Placement: TPlacement;
+  end;
+
+  TCellArray = array of array of TCell;
+
+  TBox =
+  class(TObject)
+  protected
+    FName: String;
+    FCells: TCellArray;
+    FRowCount: Integer;
+    FColCount: Integer;
+  public
+    // construction/destruction ---------------------------
+    constructor Create(const AName: String; ARowCount, AColCount: Integer);
+    // pre: 0 <= ARowCount, 0 <= AColCount,
+    // post: RowCount = ARowCount, ColCount = AColCount,
+    //       (forall Row, Col: 0 <= Row < RowCount, 0 <= Col < ColCount:
+    //          CellState(Row,Col) = csFree)
+
+    destructor Destroy; override;
+
+    // queries --------------------------------------------
+    function RowCount: Integer;
+
+    function ColCount: Integer;
+
+    function ValidCoordinates(Row, Col: Integer): Boolean;
+    // pre: true
+    // ret: (0 <= Row < RowCount) and (0 <= Col < ColCount)
+
+    function Cell(Row, Col: Integer): TCell;
+    // pre: ValidCoordinates(Row, Col)
+    // ret: Cell(Row, Col)
+
+    function CellState(Row, Col: integer): TCellState;
+    // pre: ValidCoordinates(Row, Col)
+    // ret: Cell(Row, Col).State
+
+    function CellOccupant(Row, Col: Integer): TPlacement;
+    // pre: ValidCoordinates(Row, Col)
+    // ret: Cell(Row, Col).Placement
+
+    function AreCellsFree(APlacement: TPlacement): Boolean;
+    // pre: true
+    // ret: (forall (Row, Col) in CoverP(APlacement) :
+    //         ValidCoordinates(Row, Col) and CellState(Row, Col) = csFree)
+
+    // commands -------------------------------------------
+    procedure Clear;
+    // pre: true
+    // post: (forall Row, Col: 0<=Row<RowCount, 0<=Col<ColCount:
+    //          CellState(Row, Col) = csFree)
+
+    procedure BlockCell(Row, Col: Integer);
+    // pre: ValidCoordinates(Row, Col)
+    // effect: Cell[Row, Coll].State := csBlocked
+
+    procedure OccupyCells(APlacement: TPlacement);
+    // pre: AreCellsFree(APlacement)
+    // effect: (forall (Row, Col) in CoverP(APlacement) :
+    //            Cell[Row, Col] := (csOccupied, APlacement) )
+
+    procedure UnoccupyCells(APlacement: TPlacement);
+    // pre: APlacement occurs in Self
+    // effect: (forall (Row, Col) in CoverP(APlacement) :
+    //            Cell[Row, Col] := (csFree, nil) )
+
+    // invariants -----------------------------------------
+    // (forall Row, Col: 0 <= Row < RowCount, 0 <= Col < ColCount :
+    //   CellState(Row, Col) = csOccupied <==> CellOccupant(Row, Col) <> nil
+    //   and CellState(Row, Col) = csOccupied ==>
+    //       (Row, Col) in CoverP(CellOccupant(Row, Col)) )
+  end;
+
+
+// Puzzles ----------------------------------------------------------------
+//
+// Contract still missing <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+type
+  TPuzzle =
+  class(TObject)
+  protected
+    FName: String;
+    FBox: TBox;
+    FStock: TBagOfPieces;
+  public
+    // construction/destruction ---------------------------
+    constructor Create(const AName: String; ABox: TBox; AStock: TBagOfPieces);
+    destructor Destroy; override;
+
+    // queries --------------------------------------------
+    function CanDoPlacement(APlacement: TPlacement): Boolean;
+
+    // commands -------------------------------------------
+    procedure DoPlacement(APlacement: TPlacement);
+    procedure UndoPlacement(APlacement: TPlacement);
+
+    property Name: String read FName;
+    property Box: TBox read FBox;
+    property Stock: TBagOfPieces read FStock;
+  end;
+
+
+implementation //=========================================================
+
+uses
+  Math, SysUtils, IniFiles;
+
+{ Positions }
+
+
+{ PositionLists }
+
+
+{ TOrientation }
+
+constructor TOrientation.Create(APositionList: TPositionList);
+begin
+  inherited Create;
+  FPositionList := APositionList;
+end;
+
+destructor TOrientation.Destroy;
+begin
+  Finalize(FPositionList);
+  inherited;
+end;
+
+function TOrientation.MaxCol: Integer;
+var
+  I: Integer; // to traverse FPositionList
+begin
+  Result := - MaxInt;
+  for I := 0 to Length(FPositionlist) - 1
+  do Result := Max(Result, FPositionList[I].Col);
+end;
+
+function TOrientation.MaxRow: Integer;
+var
+  I: Integer; // to traverse FPositionList
+begin
+  Result := - MaxInt;
+  for I := 0 to Length(FPositionlist) - 1
+  do Result := Max(Result, FPositionList[I].Row);
+end;
+
+function TOrientation.Position(I: Integer): TPosition;
+begin
+  Assert((0 <= I) and (I < Length(FPositionList)),
+    Format('TOrientation.Position.pre failed; I = %d; Length = %d .',
+       [I, Length(FPositionList)] ));
+  Result := FPositionList[I];
+end;
+
+function TOrientation.PositionCount: Integer;
+begin
+  Result := Length(FPositionList);
+end;
+
+function TOrientation.PositionList: TPositionList;
+begin
+  Result := FPositionList;
+end;
+
+
+{ TPiece }
+
+procedure TPiece.AddOrientation(const AOrientation: TOrientation);
+begin
+  FOrientations.Add(AOrientation);
+end;
+
+function TPiece.Color: TColor;
+begin
+  Result := FColor;
+end;
+
+constructor TPiece.Create(const AName: String; AColor: TColor; AMultiplicity: Integer);
+begin
+  Assert(AMultiplicity > 0,
+    Format('TPiece.Create.pre failed; multiplicity = %d.',
+           [AMultiplicity]));
+  inherited Create;
+  FName := AName;
+  FColor := AColor;
+  FMultiplicity := AMultiplicity;
+  FOrientations := TObjectList.Create;
+end;
+
+destructor TPiece.Destroy;
+begin
+  FOrientations.Free;
+  inherited;
+end;
+
+function TPiece.OrientationCount: Integer;
+begin
+  Result := FOrientations.Count;
+end;
+
+function TPiece.GetOrientation(I: Integer): TOrientation;
+begin
+  Assert( (0 <= I) and (I < OrientationCount),
+    Format('TPiece.GetOrientation.pre failed; I = %d; OrientationCount = %d .',
+      [I, OrientationCount] ));
+  Result := FOrientations.Items[I] as TOrientation;
+end;
+
+function TPiece.Name: String;
+begin
+  Result := FName;
+end;
+
+function TPiece.Multiplicity: Integer;
+begin
+  Result := FMultiplicity;
+end;
+
+procedure TPiece.IncMultiplicity;
+begin
+  FMultiplicity := FMultiplicity + 1;
+end;
+
+procedure TPiece.DecMultiplicity;
+begin
+  Assert( Multiplicity > 0,
+    Format('TPiece.DecMultiplicity.pre failed; Multiplicity = %d',
+      [Multiplicity]));
+  FMultiplicity := FMultiplicity - 1;
+end;
+
+
+{ TBagOfPieces }
+
+procedure TBagOfPieces.AddPiece(APiece: TPiece);
+begin
+   FList.Add(APiece);
+end;
+
+procedure TBagOfPieces.Clear;
+begin
+  FList.Clear;
+end;
+
+function TBagOfPieces.Count: Integer;
+begin
+  Result := FList.Count;
+end;
+
+constructor TBagOfPieces.Create(const AName: String);
+begin
+  inherited Create;
+  FName := AName;
+  FList := TObjectList.Create;
+end;
+
+destructor TBagOfPieces.Destroy;
+begin
+  FList.Free;
+  inherited;
+end;
+
+function TBagOfPieces.FindPiece(const AName: String): TPiece;
+var
+  I: Integer; // to traverse FList
+begin
+  Result := nil;
+  for I := 0 to FList.Count - 1 do
+    if (FList.Items[I] as TPiece).Name = AName
+    then Result := (FList.Items[I] as TPiece);
+end;
+
+function TBagOfPieces.GetPiece(I: Integer): TPiece;
+begin
+  Assert( (0 <= I) and (I < Count),
+    Format('TBagOfPieces.GetPiece.pre failed; I = %d; Count = %d ',
+      [I, Count]));
+  Result := (FList.Items[I] as TPiece);
+end;
+
+function TBagOfPieces.IndexOf(APiece: TPiece): Integer;
+var
+  I: Integer; // to traverse FList
+begin
+  Result := -1;
+
+  for I := 0 to FList.Count - 1 do
+  begin
+    if (FList.Items[I] as TPiece) = APiece
+    then Result := I;
+  end; { for I }
+
+end;
+
+{ TPlacement }
+
+constructor TPlacement.Create(APiece: TPiece; AOrientation: TOrientation;
+              APosition: TPosition);
+begin
+  inherited Create;
+  FPiece := APiece;
+  FOrientation := AOrientation;
+  FPosition := APosition;
+end;
+
+function CoverP(APlacement: TPlacement): TPositionList;
+//# BEGIN TODO CoverP local definitions
+  Replace this line by your text.
+//# END TODO
+begin
+//# BEGIN TODO CoverP implementation statements
+  Replace this line by your text.
+//# END TODO
+end;
+
+
+{ TBox }
+
+function TBox.AreCellsFree(APlacement: TPlacement): Boolean;
+var
+  VPositionList: TPositionList; // to capture result of CoverP
+  I: Integer; // to traverse VPositionList
+begin
+//# BEGIN TODO TBox.AreCellsFree implementation statements
+  Replace this line by your text.
+//# END TODO
+end;
+
+function TBox.Cell(Row, Col: Integer): TCell;
+begin
+  Assert(ValidCoordinates(Row, Col),
+    Format('TBox.Cell.pre failed: Row = %d; Col = %d .', [Row, Col]));
+  Result := FCells[Row, Col];
+end;
+
+function TBox.CellOccupant(Row, Col: Integer): TPlacement;
+begin
+  Result := Cell(Row, Col).Placement;
+end;
+
+function TBox.CellState(Row, Col: integer): TCellState;
+begin
+  Result := Cell(Row, Col).State;
+end;
+
+procedure TBox.Clear;
+var
+  RowIndex, ColIndex: Integer; // to traverse FCells
+  VPlacement: TPlacement; // FCells[RowIndex, ColIndex].Placement
+begin
+  for RowIndex := 0 to RowCount - 1 do
+    for ColIndex := 0 to ColCount - 1 do
+      with FCells[RowIndex, ColIndex] do
+      begin
+        VPlacement := Placement;
+        if VPlacement <> nil then
+          UnoccupyCells(VPlacement);
+        State := csFree;
+        VPlacement.Free;
+      end;
+end;
+
+procedure TBox.BlockCell(Row, Col: Integer);
+begin
+  FCells[Row, Col].State := csBlocked;
+end;
+
+function TBox.ColCount: Integer;
+begin
+  Result := FColCount;
+end;
+
+constructor TBox.Create(const AName: String; ARowCount, AColCount: Integer);
+begin
+  inherited Create;
+  FName := AName;
+  FRowCount := ARowCount;
+  FColCount := AColCount;
+  SetLength(FCells, ARowCount, AColCount);
+  Clear;
+end;
+
+destructor TBox.Destroy;
+begin
+  Finalize(FCells);
+  inherited;
+end;
+
+procedure TBox.OccupyCells(APlacement: TPlacement);
+var
+  VPositionList: TPositionList; // to capture result of CoverP
+  I: Integer; // to traverse VPositionList
+begin
+  VPositionList := CoverP(APlacement);
+
+  for I := 0 to Length(VPositionList) - 1 do
+    with VPositionList[I], FCells[Row,Col] do
+    begin
+      State := csOccupied;
+      Placement := APlacement;
+    end; { with }
+
+  Finalize(VPositionList);
+end;
+
+function TBox.RowCount: Integer;
+begin
+  Result := FRowCount;
+end;
+
+procedure TBox.UnoccupyCells(APlacement: TPlacement);
+var
+  VPositionList: TPositionList; // to capture result of CoverP
+  I: Integer; // to traverse VPositionList
+begin
+  VPositionList := CoverP(APlacement);
+
+  for I := 0 to Length(VPositionList) - 1 do
+    with VPositionList[I], FCells[Row,Col] do
+    begin
+      State := csFree;
+      Placement := nil;
+    end; { with }
+
+  Finalize(VPositionList);
+end;
+
+function TBox.ValidCoordinates(Row, Col: Integer): Boolean;
+begin
+  Result :=
+    (0 <= Row) and (Row < FRowCount) and (0 <= Col) and (Col < FColCount);
+end;
+
+
+{ TPuzzle }
+
+function TPuzzle.CanDoPlacement(APlacement: TPlacement): Boolean;
+begin
+  Result := FBox.AreCellsFree(APlacement) and
+            (APlacement.FPiece.Multiplicity > 0);
+end;
+
+constructor TPuzzle.Create(const AName: String; ABox: TBox; AStock: TBagOfPieces);
+begin
+  inherited Create;
+  FName := AName;
+  FBox := ABox;
+  FStock := AStock;
+end;
+
+destructor TPuzzle.Destroy;
+begin
+  FStock.Free;
+  FBox.Free;
+  inherited;
+end;
+
+procedure TPuzzle.DoPlacement(APlacement: TPlacement);
+begin
+  with APlacement do
+  begin
+    // remove from stock
+    FPiece.DecMultiplicity;
+    // place in box
+    FBox.OccupyCells(APlacement);
+  end; { with }
+end;
+
+procedure TPuzzle.UndoPlacement(APlacement: TPlacement);
+begin
+  with APlacement do
+  begin
+    // remove from box
+    FBox.UnoccupyCells(APlacement);
+    // return to stock
+    FPiece.IncMultiplicity;
+  end; { with }
+end;
+
+end.

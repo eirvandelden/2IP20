@@ -1,0 +1,181 @@
+unit PersonStringList;
+// Etienne van Delden
+// 0618959
+// 24-04-2007
+
+
+//------------------------------------------------------------------------------
+// In deze unit wordt een class TPersonList_StringList gedefinieerd, die afstamt
+// van de abstract base class TPersonList. De implementatie maakt gebruik van
+// een protected field FList van het type TStringList (een Delphi container
+// class).
+//
+// Van de te maken class zijn de header, het public contract en de lege method
+// declarations gegeven. De interne invarianten en de code van de methods moeten
+// nog ingevuld worden op de met {OWN CODE ADDED} aangegeven plaatsen.
+//------------------------------------------------------------------------------
+
+interface
+
+uses
+  Classes,
+  PersonBase;
+
+type
+  TPersonList_StringList =
+  class(TPersonList)
+  protected
+    FList: TStringList;
+    // invariants ----------------------
+    {OWN CODE ADDED}
+
+    // representation ------------------
+    {OWN CODE ADDED}
+
+  public
+    // construction and destruction
+    constructor Create;
+    // pre: true
+    // post: Abstr = []
+
+    destructor Destroy;override;
+
+    // primitive queries ---------------
+    function Count: Integer; override;
+    // pre: true
+    // ret: |dom(Abstr)|
+
+    function Indexof(AFamilyName: String): Integer; override;
+    // pre: true
+    // ret: I s.t. Abstr[I].s = AFamilyName, otherwise -1
+
+    function Get(I: Integer): TPersonData; override;
+    // pre: 0 <= I < |Abstr|
+    // ret: Abstr[I].d
+
+    // commands ------------------------
+    procedure Clear; override;
+    // pre: true
+    // post: Abstr = []
+
+    procedure Add(AData: TPersonData); override;
+    // pre: not Has(AData.FamilyName)
+    // effect: Abstr := old Abstr ++ [(AData.FamilyName, Adata)]
+
+    procedure Change(AFamilyName: String; ANewData: TPersonData); override;
+    // pre: Abstr :: S1 ++ [(AFamilyName, d)] ++ S2
+    //      AFamilyName = ANewData.FamilyName
+    // post: Abstr = S1 ++ [(AFamilyName, ANewData)] ++ S2
+
+    procedure Delete(AFamilyName: String); override;
+    // pre: Abstr :: S1 ++ [(AFamilyName, d)] ++ S2
+    // post: Abstr = S1 ++ S2
+
+
+    // model variables -----------------
+    // Abstr: finite list of pairs (s,d), where s in String and d in TPersonData
+
+    // invariants ----------------------
+    // IsMap: (forall I, J: 0 <= I < J < |Abstr|: Abstr[I}.s <> Abstr[J].s)
+    // Consistent: (forall I: 0 <= I < |Abstr|: Abstr[I].s = Abstr[I].d.FamilyName)
+    //
+    
+    // Functies om de asserts wat kleiner te maken
+    // De functies bekijken of de aanroep aan de pre voldoet, de result is een bool...
+
+
+  end;
+
+implementation //===============================================================
+
+uses
+  SysUtils;
+
+{ TPersonList_StringList }
+
+procedure TPersonList_StringList.Add(AData: TPersonData);
+begin
+  {OWN CODE ADDED}
+//  Assert( Not (IndexOf(AData.FamilyName) <> - 1), 'TPersonList_StringList.Add pre failed;' );
+
+  FList.AddObject(AData.FamilyName, AData);       // voeg het nieuwe object met naam FamilyName toe
+
+end;                                       
+
+
+procedure TPersonList_StringList.Change(AFamilyName: String; ANewData: TPersonData);
+var
+   I: Integer;
+
+begin
+  {OWN CODE ADDED}
+  Assert( (FList.IndexOf(AFamilyName) <> - 1),
+   Format('TPersonList_Array.Change pre failed; FamilyName = %s',
+    [AFamilyName]));                              // is de Change wel valid om te doen?
+    
+  I := Flist.IndexOf(AFamilyName);                // Haal de index van de naam die we willen aanpassen
+  FList.Objects[I] := ANewData;                   // Vervang dat object met het nieuwe object
+  
+end;    // procedure
+
+procedure TPersonList_StringList.Clear;
+begin
+  {OWN CODE ADDED}
+
+ FList.Clear;                                     // Maak Flist leeg
+end;   //procedure
+
+function TPersonList_StringList.Count: Integer;
+begin
+  {OWN CODE ADDED}
+   Result := FList.Count;                         // Geef het aantal objecten in FList
+end;   //function
+
+constructor TPersonList_StringList.Create;
+begin
+  {OWN CODE ADDED}
+     FList := TStringList.Create;                 // Flist wordt een StringList, die gemaakt moet worden (inheritance TObject)
+end;  //constructor
+
+procedure TPersonList_StringList.Delete(AFamilyName: String);
+var
+   Index: Integer;
+
+begin
+  {OWN CODE ADDED}
+  Assert( (FList.IndexOf(AFamilyName) <> - 1),
+   Format('TPersonList_Array.Change pre failed; FamilyName = %s, I = %s',
+    [AFamilyName, IntToStr(FList.IndexOf(AFamilyName))]));                              // Mogen we wel iets verwijderen?
+
+  Index := FList.IndexOf(AFamilyName);            // Haal de index van wat we moeten verwijderen
+  FList.Delete(Index);                            // Verwijder
+
+end; //procedure
+
+destructor TPersonList_StringList.Destroy; 
+begin 
+  {OWN CODE ADDED}                                          // Destroy de StringList (inheritance TObject) 
+  Flist.Destroy; 
+end; //destructor
+
+function TPersonList_StringList.Get(I: Integer): TPersonData;
+begin
+  {OWN CODE ADDED}
+  Assert( ((0 <= I) and (I < FList.Count)),
+   Format('TPersonList_Array.Get pre failed; I = %s',
+    [IntToStr(I)]));                                       // Kunnen  we wel iets opvragen?
+
+  Result := (FList.Objects[I] as TPersonData);
+
+
+end;  //function
+
+
+
+function TPersonList_StringList.Indexof(AFamilyName: String): Integer;
+begin
+  {OWN CODE ADDED}
+  Result := FList.IndexOf(AFamilyName);
+end; //fucntion
+
+end.

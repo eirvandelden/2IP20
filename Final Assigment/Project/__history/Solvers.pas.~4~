@@ -1,0 +1,259 @@
+unit Solvers;
+
+//------------------------------------------------------------------------------
+// This unit defines several Solver classes. A Solver class embodies a
+// particular solution strategy.
+// All Solver classes descend from the abstract base class TSolver.
+// - TDummySolver produces a fixed solution. It is intended for
+//   testing and demonstration purposes only.
+// - TBacktrackSolver uses a standard backtracking algorithm.
+// - TTom is reserved for the smartest solution ;-)
+
+//# BEGIN TODO author name, id.nr., date for unit header
+ // Etienne van Delden
+ // 0618959
+ // 11-06-07
+//# END TODO
+
+interface
+
+uses
+  Classes,
+  Base;
+
+type
+  // TSolver -------------------------------------------------------------------
+  // TSolver is the abstract base class for all Solver classes.
+  // It refers to a TPuzzle object, the puzzle to be solved.
+  // - FindAll finds all solutions
+  // There are several hooks for evoking actions, realized by callbacks (the
+  // mechanism is the same as the event handling mechanism, and uses the
+  // event type TNotifyEvent):
+  // - Every time a solution is found, the OnFound procedure is called, if
+  //   assigned.
+  // - Every time a piece is placed, the OnPiecePlaced procedure is called, if
+  //   assigned.
+  // - Every time a piece is found, the OnPieceremoved procedure is called, if
+  //   assigned.
+  //----------------------------------------------------------------------------
+
+  TSolver =
+  class(TObject)
+  protected
+    FPuzzle: TPuzzle; // the (partially solved) puzzle to be solved fully
+    FSolutionCount: Integer; // number of solutions found
+    FOnFound: TNotifyEvent; // to signal that a solution was found
+    FOnPiecePlaced: TNotifyEvent; // to signal that a piece was placed
+    FOnPieceRemoved: TNotifyEvent; // to signal that a piece was removed
+    procedure SolutionFound;
+  public
+    // construction/destruction ---------------------------
+    constructor Create(APuzzle: TPuzzle);
+      { create a solver for APuzzle, calling OnFound for each solution }
+
+    // commands -------------------------------------------
+    procedure FindAll; virtual;
+    // pre:  FPuzzle <> nil
+    // post: all solutions have been found, and
+    //       SolutionFound has been called for each of them.
+    //       When assigned, OnPiecePlaced and OnPieceRemoved are called
+    //       for each piece placed/removed respectively.
+
+    property Puzzle: TPuzzle read FPuzzle write FPuzzle;
+    property SolutionCount: Integer read FSolutionCount;
+    property OnFound: TNotifyEvent read FOnFound write FOnFound;
+    property OnPiecePlaced: TNotifyEvent read FOnPiecePlaced write FOnPiecePlaced;
+    property OnPieceRemoved: TNotifyEvent read FOnPieceRemoved write FOnPieceRemoved;
+  end;
+
+  TDummySolver =
+  class(TSolver)
+  public
+    procedure FindAll; override;
+  end;
+
+  TBacktrackSolver =
+  class(TSolver)
+  protected
+    procedure EmptyCell(var Solved: Boolean; var APosition: TPosition);
+      { pre: true
+        post: Solved = all cells are nonempty,
+              if not Solved, then cell APosition is empty }
+    procedure Search;
+      { pre: state = S
+        post: all solutions that are an extension of the current state
+              have been processed (SolutionFound called),
+              piece placement/removal has been properly notified,
+              state = S  }
+  public
+    // commands -------------------------------------------
+    procedure FindAll; override;
+  end;
+
+implementation //===============================================================
+
+{ TSolver }
+
+constructor TSolver.Create(APuzzle: TPuzzle);
+begin
+  inherited Create;
+  FPuzzle := APuzzle;
+  FSolutionCount:= 0;
+end;
+
+procedure TSolver.SolutionFound;
+begin
+  FSolutionCount := FSolutionCount + 1;
+  if Assigned(FOnFound)
+  then FOnFound(Self);
+end;
+
+procedure TSolver.FindAll;
+begin
+  Assert(Assigned(FPuzzle),
+    'TSolver.pre failed: Puzzle property has not been assigned to');
+  FSolutionCount := 0;
+end;
+
+
+{ TDummySolver }
+
+procedure TDummySolver.FindAll;
+var
+  VPiece: TPiece; // piece for VPlacement
+  VPosition: TPosition; // position for VPlacement
+  VPlacement: TPlacement; // to put into box
+begin
+  inherited FindAll;
+  with FPuzzle do
+  begin
+    VPiece := FPuzzle.Stock.FindPiece('A');
+    VPosition.Col := 2;
+    VPosition.Row := 0;
+    VPlacement := TPlacement.Create(VPiece, VPiece.GetOrientation(0), VPosition);
+    FPuzzle.DoPlacement(VPlacement);
+
+    VPiece := FPuzzle.Stock.FindPiece('B');
+    VPosition.Col := 0;
+    VPosition.Row := 0;
+    VPlacement := TPlacement.Create(VPiece, VPiece.GetOrientation(1), VPosition);
+    FPuzzle.DoPlacement(VPlacement);
+
+    VPiece := FPuzzle.Stock.FindPiece('C');
+    VPosition.Col := 1;
+    VPosition.Row := 0;
+    VPlacement := TPlacement.Create(VPiece, VPiece.GetOrientation(0), VPosition);
+    FPuzzle.DoPlacement(VPlacement);
+  end;
+
+  SolutionFound;
+end;
+
+
+{ TBacktrackSolver }
+
+procedure TBacktrackSolver.EmptyCell(var Solved: Boolean; var APosition: TPosition);
+begin
+//# BEGIN TODO implementation block for TBackTrackSolver.EmptyCell
+ // Empty cell krijgt een bool solved en aan positie mee. Als de solved true is, is de puzzel opgelost en is er dus geen lege positie
+ // is de bool false, dan is de puzzel niet opgelost en geeft hij de eerst volgende lege  blokje terug
+
+ APosition.Col := 0;
+ APosition.Row := 0;
+ Solved := True;
+
+ while solved and (APosition.Row < FPuzzle.Box.RowCount)  do
+ begin
+   while solved and (APosition.Col < FPuzzle.Box.ColCount) do
+   begin
+        if FPuzzle.Box.CellState(APosition.Row, APosition.Col) <> csFree then begin
+          Solved := False;
+        end; //if
+    inc(APosition.Col);
+   end; //while Col
+
+   inc(APosition.Row);
+   APosition.Col := 0;
+ end; //while Row
+
+ //# END TODO
+end;
+
+procedure TBacktrackSolver.Search;
+
+// recursion bound function: number of empty cells in FPuzzle
+//# BEGIN TODO implementation block for TBackTrackSolver.Search
+
+var
+ aPiece: TPiece;
+ aOrientation: TOrientation;
+ i: integer;
+ j: integer;
+ aPlacement: TPlacement;
+ solved: boolean;
+ aPosition: Tposition;
+
+///  Replace this line by your text.
+///  Piece := Stock.GetPiece(i)
+///  FPuzzle.Stock
+///  Piece.GetOrientation(i)
+///  tPlacement.Create
+///
+
+begin
+
+for i := 0 to FPuzzle.Stock.Count - 1 do begin
+aPiece := FPuzzle.Stock.GetPiece(i);
+	for j := 0 to aPiece.OrientationCount - 1 do begin
+    EmptyCell(Solved, aPosition);
+    aOrientation := aPiece.GetOrientation(i);
+    aPlacement := TPlacement.Create(aPiece, aOrientation, aPosition );
+
+
+  if not Solved then begin
+    if  FPuzzle.CanDoPlacement(aPlacement) then begin
+      FPuzzle.DoPlacement(aPlacement);
+      FOnPiecePlaced(nil);      // geen idee wat ditdoet, maar het moet
+    EmptyCell(Solved, aPosition);
+      if Solved then begin
+             SolutionFound;
+      end
+      else begin
+        Search;
+      end;
+
+      Fpuzzle.UndoPlacement(APlacement);
+
+      if Assigned(FOnPieceRemoved(nil)) then
+      begin
+        FOnPieceRemoved(nil);      // geen idee wat ditdoet, maar het moet
+      end; //if
+    end; //if
+  end; //if
+
+
+
+
+	{als de puzzle niet solved is, gebruik Empty cell om naar de eerst volgende cell te gaan,
+   zet daar dan blokje i, indien mogelijk
+	doe dan weer een aanroep van Search;
+	
+	doe vervolgens een undoPosition }
+
+
+	end; //for
+end; //for
+
+
+
+
+//# END TODO
+end;
+
+procedure TBacktrackSolver.FindAll;
+begin
+  inherited FindAll;
+  Search;
+end;
+
+end.

@@ -1,0 +1,140 @@
+object Form1: TForm1
+  Left = 1886
+  Height = 588
+  Top = 90
+  Width = 814
+  HorzScrollBar.Page = 813
+  VertScrollBar.Page = 587
+  ActiveControl = StackMemo
+  Caption = 'Form1'
+  OnCreate = FormCreate
+  object Splitter1: TSplitter
+    Height = 588
+    Width = 5
+  end
+  object StackMemo: TMemo
+    Left = 8
+    Height = 488
+    Top = 16
+    Width = 392
+    Font.Height = -12
+    Lines.Strings = (
+      'Stack Contents:'
+      ''
+      ''
+    )
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+  end
+  object QueueMemo: TMemo
+    Left = 416
+    Height = 488
+    Top = 16
+    Width = 384
+    Font.Height = -12
+    Lines.Strings = (
+      'Queue Contents:'
+      ''
+    )
+    ScrollBars = ssAutoBoth
+    TabOrder = 1
+  end
+  object ClearStackButton: TButton
+    Left = 32
+    Height = 25
+    Top = 520
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Clear'
+    OnClick = ClearStackButtonClick
+    TabOrder = 2
+  end
+  object RandomStackButton: TButton
+    Left = 128
+    Height = 25
+    Top = 520
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Random'
+    OnClick = RandomStackButtonClick
+    TabOrder = 3
+  end
+  object PopStackButton: TButton
+    Left = 32
+    Height = 25
+    Top = 560
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Pop'
+    OnClick = PopStackButtonClick
+    TabOrder = 4
+  end
+  object PushStackButton: TButton
+    Left = 128
+    Height = 25
+    Top = 560
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Push'
+    OnClick = PushStackButtonClick
+    TabOrder = 5
+  end
+  object MaskEdit1: TEdit
+    Left = 224
+    Height = 23
+    Top = 560
+    Width = 80
+    MaxLength = 2
+    OnChange = MaskEdit1Change
+    TabOrder = 6
+  end
+  object ClearQueueButton: TButton
+    Left = 432
+    Height = 25
+    Top = 520
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Clear'
+    OnClick = ClearQueueButtonClick
+    TabOrder = 7
+  end
+  object RandomQueueButton: TButton
+    Left = 536
+    Height = 25
+    Top = 520
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Random'
+    OnClick = RandomQueueButtonClick
+    TabOrder = 8
+  end
+  object PutQueueButton: TButton
+    Left = 536
+    Height = 25
+    Top = 560
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Put'
+    OnClick = PutQueueButtonClick
+    TabOrder = 9
+  end
+  object RemFirstQueueButton: TButton
+    Left = 432
+    Height = 25
+    Top = 560
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = 'RemFist'
+    OnClick = RemFirstButtonClick
+    TabOrder = 10
+  end
+  object MaskEdit2: TEdit
+    Left = 632
+    Height = 23
+    Top = 560
+    Width = 80
+    MaxLength = 2
+    OnChange = MaskEdit2Change
+    TabOrder = 11
+  end
+end

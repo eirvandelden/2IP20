@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Compiler Value="/usr/local/bin/ppc386" Date="1175152831"/>
+  <Params Value=" -S2cgi -OG1 -gl -WG -vewnhi -l -Fl/usr/X11R6/lib/ -Fl/sw/lib/ -Fu/usr/local/share/lazarus/lcl/units/i386-darwin/ -Fu/usr/local/share/lazarus/lcl/units/i386-darwin/gtk/ -Fu/usr/local/share/lazarus/packager/units/i386-darwin/ -Fu. -oqueue -dLCL -dLCLgtk queue.lpr"/>
+</CONFIG>

@@ -1,0 +1,120 @@
+object Form1: TForm1
+  Left = 211
+  Top = 243
+  Width = 276
+  Height = 306
+  HorzScrollBar.Range = 265
+  VertScrollBar.Range = 297
+  BorderStyle = fbsSizeToolWin
+  Caption = 'Form1'
+  Color = clBackground
+  Font.Color = clBlack
+  Font.Height = 11
+  Font.Name = 'MS Shell Dlg'
+  Font.Pitch = fpVariable
+  Font.Style = []
+  Font.Weight = 40
+  ParentFont = False
+  Scaled = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  object Label1: TLabel
+    Left = 144
+    Top = 16
+    Width = 32
+    Height = 13
+    Caption = 'Label1'
+    DragMode = dmAutomatic
+    OnEndDrag = SharedEndDrag
+    OnStartDrag = Label1StartDrag
+  end
+  object Edit1: TEdit
+    Left = 144
+    Top = 40
+    Width = 121
+    Height = 21
+    DragMode = dmAutomatic
+    TabOrder = 0
+    Text = 'Edit1'
+    OnEndDrag = SharedEndDrag
+    OnStartDrag = Edit1StartDrag
+  end
+  object Panel1: TPanel
+    Left = 8
+    Top = 184
+    Width = 257
+    Height = 113
+    Caption = 'Panel1'
+    TabOrder = 1
+    OnDragDrop = Panel1DragDrop
+    OnDragOver = Panel1DragOver
+  end
+  object Button1: TButton
+    Left = 8
+    Top = 8
+    Width = 121
+    Height = 25
+    Caption = 'Button1'
+    DragMode = dmAutomatic
+    TabOrder = 2
+    OnEndDrag = SharedEndDrag
+    OnStartDrag = Button1StartDrag
+  end
+  object Memo1: TMemo
+    Left = 8
+    Top = 72
+    Width = 121
+    Height = 95
+    DragMode = dmAutomatic
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 3
+    OnEndDrag = SharedEndDrag
+    OnStartDrag = Memo1StartDrag
+  end
+  object ListBox1: TListBox
+    Left = 144
+    Top = 72
+    Width = 121
+    Height = 95
+    DragMode = dmAutomatic
+    Items.Strings = (
+      'One'
+      'Two'
+      'Three'
+      'Four'
+      'Five'
+      'Six'
+      'Seven'
+      'Eight'
+      'Nine'
+      'Ten')
+    Rows = 10
+    TabOrder = 4
+    OnEndDrag = SharedEndDrag
+    OnStartDrag = ListBox1StartDrag
+  end
+  object ComboBox1: TComboBox
+    Left = 8
+    Top = 40
+    Width = 121
+    Height = 21
+    DragMode = dmAutomatic
+    ItemHeight = 15
+    Items.Strings = (
+      'One'
+      'Two'
+      'Three'
+      'Four'
+      'Five'
+      'Six'
+      'Seven'
+      'Eight'
+      'Nine'
+      'Ten')
+    TabOrder = 6
+    Text = 'One'
+    OnEndDrag = SharedEndDrag
+    OnStartDrag = ComboBox1StartDrag
+  end
+end

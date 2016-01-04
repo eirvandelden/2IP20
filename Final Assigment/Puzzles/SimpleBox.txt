@@ -1,0 +1,9 @@
+[Main]
+kind=box
+
+[Box]
+name=simple box
+boxwidth=3
+boxheight=2
+row0=...
+row1=...

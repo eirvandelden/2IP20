@@ -1,0 +1,168 @@
+object Form1: TForm1
+  Left = 229
+  Top = 131
+  Caption = 'Form1'
+  ClientHeight = 610
+  ClientWidth = 1063
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -10
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 20
+    Top = 36
+    Width = 315
+    Height = 13
+    Caption = 
+      '&Pieces (Right-click to rotate/flip; left-click and drag to move' +
+      ' to Box)'
+  end
+  object Label2: TLabel
+    Left = 22
+    Top = 228
+    Width = 199
+    Height = 13
+    Caption = '&Box (left-click and drag to move to Pieces)'
+    FocusControl = BoxGrid
+  end
+  object BoxGrid: TDrawGrid
+    Left = 22
+    Top = 247
+    Width = 260
+    Height = 150
+    DefaultColWidth = 16
+    DefaultRowHeight = 16
+    DefaultDrawing = False
+    FixedCols = 0
+    FixedRows = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine]
+    TabOrder = 0
+    OnDragDrop = BoxGridDragDrop
+    OnDragOver = BoxGridDragOver
+    OnDrawCell = BoxGridDrawCell
+    OnEndDrag = BoxGridEndDrag
+    OnMouseDown = BoxGridMouseDown
+    OnStartDrag = BoxGridStartDrag
+  end
+  object PiecesGrid: TStringGrid
+    Left = 20
+    Top = 59
+    Width = 813
+    Height = 137
+    ColCount = 50
+    DefaultColWidth = 16
+    DefaultRowHeight = 16
+    FixedCols = 0
+    FixedRows = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine]
+    TabOrder = 1
+    OnDragDrop = PiecesGridDragDrop
+    OnDragOver = PiecesGridDragOver
+    OnDrawCell = PiecesGridDrawCell
+    OnEndDrag = PiecesGridEndDrag
+    OnMouseDown = PiecesGridMouseDown
+    OnStartDrag = PiecesGridStartDrag
+  end
+  object FindAllButton: TButton
+    Left = 406
+    Top = 319
+    Width = 61
+    Height = 20
+    Caption = 'Find &All'
+    TabOrder = 2
+    OnClick = FindAllButtonClick
+  end
+  object LogMemo: TMemo
+    Left = 488
+    Top = 244
+    Width = 325
+    Height = 203
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Courier New'
+    Font.Style = []
+    Lines.Strings = (
+      'Solutions found will be logged below'
+      '')
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 3
+  end
+  object ShowMovesCheckBox: TCheckBox
+    Left = 390
+    Top = 254
+    Width = 92
+    Height = 13
+    Caption = 'Show &Moves'
+    Checked = True
+    State = cbChecked
+    TabOrder = 4
+    OnClick = ShowMovesCheckBoxClick
+  end
+  object ShowSolutionsCheckBox: TCheckBox
+    Left = 390
+    Top = 286
+    Width = 92
+    Height = 14
+    Caption = 'Show &Solutions'
+    Checked = True
+    State = cbChecked
+    TabOrder = 5
+    OnClick = ShowSolutionsCheckBoxClick
+  end
+  object MainMenu1: TMainMenu
+    Left = 904
+    Top = 8
+    object File1: TMenuItem
+      Caption = '&File'
+      object New1: TMenuItem
+        Caption = '&New'
+        Enabled = False
+      end
+      object Open1: TMenuItem
+        Caption = '&Open...'
+        OnClick = Open1Click
+      end
+      object SaveAs1: TMenuItem
+        Caption = 'Save Solutions &As...'
+        OnClick = SaveAs1Click
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object Print1: TMenuItem
+        Caption = '&Print...'
+        Enabled = False
+      end
+      object PrintSetup1: TMenuItem
+        Caption = 'P&rint Setup...'
+        Enabled = False
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object Exit1: TMenuItem
+        Caption = 'E&xit'
+        OnClick = FormClose
+      end
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 816
+    Top = 8
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = 'txt'
+    Filter = 'Solutions|*.sol'
+    Left = 864
+    Top = 8
+  end
+end

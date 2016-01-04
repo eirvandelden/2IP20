@@ -1,0 +1,170 @@
+unit PersonStringList;
+
+//------------------------------------------------------------------------------
+// In deze unit wordt een class TPersonList_StringList gedefinieerd, die afstamt
+// van de abstract base class TPersonList. De implementatie maakt gebruik van
+// een protected field FList van het type TStringList (een Delphi container
+// class).
+//
+// Van de te maken class zijn de header, het public contract en de lege method
+// declarations gegeven. De interne invarianten en de code van de methods moeten
+// nog ingevuld worden op de met {TODO} aangegeven plaatsen.
+//------------------------------------------------------------------------------
+
+interface
+
+uses
+  Classes,
+  PersonBase;
+
+type
+  TPersonList_StringList =
+  class(TPersonList)
+  protected
+    FList: TStringList;
+    // invariants ----------------------
+    {TODO}
+
+    // representation ------------------
+    {TODO}
+
+  public
+    // construction and destruction
+    constructor Create;
+    // pre: true
+    // post: Abstr = []
+
+    destructor Destroy;override;
+
+    // primitive queries ---------------
+    function Count: Integer; override;
+    // pre: true
+    // ret: |dom(Abstr)|
+
+    function Indexof(AFamilyName: String): Integer; override;
+    // pre: true
+    // ret: I s.t. Abstr[I].s = AFamilyName, otherwise -1
+
+    function Get(I: Integer): TPersonData; override;
+    // pre: 0 <= I < |Abstr|
+    // ret: Abstr[I].d
+
+    // commands ------------------------
+    procedure Clear; override;
+    // pre: true
+    // post: Abstr = []
+
+    procedure Add(AData: TPersonData); override;
+    // pre: not Has(AData.FamilyName)
+    // effect: Abstr := old Abstr ++ [(AData.FamilyName, Adata)]
+
+    procedure Change(AFamilyName: String; ANewData: TPersonData); override;
+    // pre: Abstr :: S1 ++ [(AFamilyName, d)] ++ S2
+    //      AFamilyName = ANewData.FamilyName
+    // post: Abstr = S1 ++ [(AFamilyName, ANewData)] ++ S2
+
+    procedure Delete(AFamilyName: String); override;
+    // pre: Abstr :: S1 ++ [(AFamilyName, d)] ++ S2
+    // post: Abstr = S1 ++ S2
+
+
+    // model variables -----------------
+    // Abstr: finite list of pairs (s,d), where s in String and d in TPersonData
+
+    // invariants ----------------------
+    // IsMap: (forall I, J: 0 <= I < J < |Abstr|: Abstr[I}.s <> Abstr[J].s)
+    // Consistent: (forall I: 0 <= I < |Abstr|: Abstr[I].s = Abstr[I].d.FamilyName)
+    //
+  end;
+
+
+implementation //===============================================================
+
+uses
+  SysUtils;
+
+{ TPersonList_StringList }
+
+procedure TPersonList_StringList.Add(AData: TPersonData);
+begin
+  {TODO}
+     Assert( True, 'TPersonList_StringList.Add pre failed;' );
+  Flist.AddObject(AData.FamilyName, AData);
+
+end;                                       
+
+procedure TPersonList_StringList.Change(AFamilyName: String; ANewData: TPersonData);
+
+var
+   Index: Integer;
+
+begin
+  {TODO}
+       Assert( True, 'TPersonList_StringList.Change pre failed;' );
+  Index := Flist.IndexOf(AFamilyName);
+  FList.Delete(Index);
+  FList.InsertObject(Index, AFamilyName, ANewData);
+
+end;
+
+procedure TPersonList_StringList.Clear;
+begin
+  {TODO}
+     Assert( True, 'TPersonList_StringList.Create pre failed;' );
+
+Flist.Clear;
+
+end;
+
+function TPersonList_StringList.Count: Integer;
+begin
+  {TODO}
+     Assert( True, 'TPersonList_StringList.Count pre failed;' );
+   Result := FList.Count;
+end;
+
+constructor TPersonList_StringList.Create;
+begin
+  {TODO}
+     Assert( True, 'TPersonList_StringList.Create pre failed;' );
+    FList.Create;
+end;
+
+procedure TPersonList_StringList.Delete(AFamilyName: String);
+var
+   Index: Integer;
+
+begin
+  {TODO}
+     Assert( True, 'TPersonList_StringList.Delete pre failed;' );
+    Index := FList.IndexOf(AFamilyName);
+    FList.Delete(Index);
+end;
+
+destructor TPersonList_StringList.Destroy;
+begin
+  {TODO}
+     Assert( True, 'TPersonList_StringList.Destroy pre failed;' );
+  Flist.Destroy;
+end;
+
+function TPersonList_StringList.Get(I: Integer): TPersonData;
+begin
+  {TODO}
+//  Assert( I < Count,
+//    Format('TPersonList_StringList.Get pre failed; I = %s',
+//      [I]));
+
+     Assert( True, 'TPersonList_StringList.Get pre failed;' );
+
+end;
+
+function TPersonList_StringList.Indexof(AFamilyName: String): Integer;
+begin
+  {TODO}
+     Assert( True, 'TPersonList_StringList.Indexof pre failed;' );
+  Result := FList.IndexOf(AFamilyName);
+end;
+
+end.
+

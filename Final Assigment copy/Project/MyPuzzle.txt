@@ -1,0 +1,7 @@
+[Main]
+kind=puzzle
+
+[Puzzle]
+name=my puzzle
+pieces=MyPieces.txt
+box=MyBox.txt

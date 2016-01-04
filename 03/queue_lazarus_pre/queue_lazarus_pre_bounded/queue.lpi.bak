@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <ProjectOptions>
+    <PathDelim Value="/"/>
+    <Version Value="5"/>
+    <General>
+      <MainUnit Value="0"/>
+      <IconPath Value="./"/>
+      <TargetFileExt Value=""/>
+      <ActiveEditorIndexAtStart Value="1"/>
+    </General>
+    <VersionInfo>
+      <ProjectVersion Value=""/>
+      <Language Value=""/>
+      <CharSet Value=""/>
+    </VersionInfo>
+    <PublishOptions>
+      <Version Value="2"/>
+      <IgnoreBinaries Value="False"/>
+      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
+      <ExcludeFileFilter Value="*.(bak|ppu|ppw|o|so);*~;backup"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T 'Lazarus Run Output' -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="1">
+      <Item1>
+        <PackageName Value="LCL"/>
+      </Item1>
+    </RequiredPackages>
+    <Units Count="6">
+      <Unit0>
+        <Filename Value="queue.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="queue"/>
+        <UsageCount Value="50"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="main.pas"/>
+        <ComponentName Value="Form1"/>
+        <IsPartOfProject Value="True"/>
+        <ResourceFilename Value="main.lrs"/>
+        <UnitName Value="main"/>
+        <CursorPos X="26" Y="105"/>
+        <TopLine Value="100"/>
+        <EditorIndex Value="0"/>
+        <UsageCount Value="50"/>
+        <Loaded Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="../prefab/ProjectBounded/Main.pas"/>
+        <UnitName Value="Main"/>
+        <CursorPos X="36" Y="30"/>
+        <TopLine Value="110"/>
+        <UsageCount Value="7"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="boundedstack.pas"/>
+        <UnitName Value="BoundedStack"/>
+        <CursorPos X="66" Y="101"/>
+        <TopLine Value="76"/>
+        <UsageCount Value="10"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="boundedqueue.pas"/>
+        <UnitName Value="BoundedQueue"/>
+        <CursorPos X="39" Y="165"/>
+        <TopLine Value="153"/>
+        <UsageCount Value="24"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="BoundedQueue.pas"/>
+        <UnitName Value="BoundedQueue"/>
+        <CursorPos X="32" Y="160"/>
+        <TopLine Value="250"/>
+        <EditorIndex Value="1"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit5>
+    </Units>
+    <JumpHistory Count="4" HistoryIndex="3">
+      <Position1>
+        <Filename Value="BoundedQueue.pas"/>
+        <Caret Line="195" Column="56" TopLine="187"/>
+      </Position1>
+      <Position2>
+        <Filename Value="BoundedQueue.pas"/>
+        <Caret Line="197" Column="40" TopLine="180"/>
+      </Position2>
+      <Position3>
+        <Filename Value="BoundedQueue.pas"/>
+        <Caret Line="234" Column="52" TopLine="217"/>
+      </Position3>
+      <Position4>
+        <Filename Value="BoundedQueue.pas"/>
+        <Caret Line="221" Column="49" TopLine="217"/>
+      </Position4>
+    </JumpHistory>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="5"/>
+    <SearchPaths>
+      <SrcPath Value="$(LazarusDir)/lcl/;$(LazarusDir)/lcl/interfaces/$(LCLWidgetType)/"/>
+    </SearchPaths>
+    <CodeGeneration>
+      <Generate Value="Faster"/>
+    </CodeGeneration>
+    <Linking>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="2">
+      <Item1>
+        <Name Value="ECodetoolError"/>
+      </Item1>
+      <Item2>
+        <Name Value="EFOpenError"/>
+      </Item2>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

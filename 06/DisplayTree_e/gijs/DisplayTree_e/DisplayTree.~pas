@@ -1,0 +1,398 @@
+unit DisplayTree;
+
+// In deze unit ontbreekt de code van de procedures AuxCalc en DrawTree.
+// De plaatsen waar code toegevoegd moet geworden zijn gemarkeerd met TODO .
+
+interface
+
+uses
+  Graphics;
+
+
+
+type
+  TCompare = (ls, eq, gt);
+
+  //----------------------------------------------------------------------------
+  // A record of type TNode represents a node of a binary search tree.
+  // In addition it contains layout information needed for drawing the tree.
+  //----------------------------------------------------------------------------
+  PNode = ^TNode;
+  TNode =
+  record
+    // binary search tree fields
+    FValue: Integer;
+    FLeft: PNode;
+    FRight: PNode;
+    // layout fields
+    FHeight: Integer; // height in pixels of the tree with this node as root.
+    FWidth: Integer;  // width in pixels of the tree with this node as root.
+    FX: Integer;      // relative X-xoordinate.
+    FY: Integer;      // relative Y-coordinate.
+  end;
+
+
+  //----------------------------------------------------------------------------
+  // The class TTree maintains a binary search tree (BST) with operations
+  // Count, Occurs, Clear, Add and Remove. In addition, it also contains
+  // facilities for calculating a layout for the tree and for drawing the tree
+  // according to this layout.
+  //----------------------------------------------------------------------------
+  // Queries:
+  // - Count           The numberof nodes in the tree
+  // - ToString        A textual representation of the set of values in the tree
+  // - Occurs(AValue)  Indicates whether a value occurs in the tree
+  // - Width           Width in pixels of the tree drawing
+  // - Height          Height in pixels of the tree drawing
+  //-----------------------------
+  // Binary search tree commands:
+  // Clear             Remove all values from the tree
+  // Add(AValue)       Add a value to the tree
+  // Remove(AValue)    Delete a value from the tree
+  //-----------------------------
+  // Layout and draw commands:
+  // - CalculateLayout(DrawEmptyTrees, RootPositionStyle)
+  //                   Calculate the layout information for each node
+  //     - DrawEmptyTrees:
+  //                   Indicates whether empty trees should be drawn as well
+  //     - RootPositionStyle:
+  //                   Indicates where the root should br drawn w.r.t. subtrees:
+  //       - 0: Midposition of width
+  //       - 1: Halfway roots of subtrees
+  //       - 2: Halfway gap between subtrees
+  // - Draw(ACanvas, DrawBoundingBoxes)
+  //                   Draws the tree on ACanvas. DrawBoundingBoxes indicates
+  //                   whether bounding boxes should be drawn as well.                   
+  //-----------------------------
+  // Adjustable layout properties:
+  // - HSpace          Horizontal spacing between adjacent trees
+  // - VSpace          Vertical spacing between node positions
+  // - NodeSize        *Half* the size of a node rectangle
+  //----------------------------------------------------------------------------
+  // FOR COMMENTS ON PROTECTED MEMBERS SEE THE IMPLEMENTATION SECTION
+  //----------------------------------------------------------------------------
+  TTree =
+  class(TObject)
+  protected
+    FRoot: PNode;
+    FHSpace: Integer;
+    FVSpace: Integer;
+    FNodeSize: Integer;
+    FDrawBoundingBoxes: Boolean;
+    FDrawEmptyTrees: Boolean;
+    FRootPositionStyle: Integer;
+
+    // auxiliary tree queries
+    function Find(AValue: Integer; ANode: PNode): PNode;
+    function CountNodes(ANode: PNode): Integer;
+    function TreeToString(ANode: PNode): String;
+
+    // auxiliary tree commands
+    procedure DisposeTree(ANode: PNode);
+    procedure Insert(AValue: Integer; var P: PNode);
+    procedure Delete(AValue: Integer; var P: PNode);
+    procedure DeleteRM(var R: PNode; var S: PNode);
+    function TreeHeight(ANode: PNode): Integer;
+    function TreeWidth(ANode: PNode): Integer;
+    function TreeRootX(ANode: PNode): Integer;
+    function TreeRootY(ANode: PNode): Integer;
+
+    // auxiliary commands for layout computation and Drawing
+    procedure AuxCalc(ANode: PNode);
+    procedure DrawBackGround(ACanvas: TCanvas);
+    procedure DrawTree(ANode: PNode; AX, AY: Integer; ACanvas: TCanvas);
+  public
+    // construction/destruction ---------------------------
+    constructor Create;
+    destructor Destroy; override;
+
+    // queries --------------------------------------------
+    function Count: Integer;
+    function ToString: String;
+    function Occurs(AValue: Integer): Boolean;
+    function Width: Integer;
+    function Height: Integer;
+
+    // binary search tree commands ------------------------
+    procedure Clear;
+    procedure Add(AValue: Integer);
+    procedure Remove(AValue: Integer);
+
+    // layout and draw commands ---------------------------
+    procedure CalculateLayout(DrawEmptyTrees: Boolean; RootPositionStyle: Integer);
+    procedure Draw(ACanvas: TCanvas; DrawBoundingBoxes: Boolean);
+
+    // adjustable layout parameters
+    property HSpace: Integer read FHSpace write FHSpace; // horizontal spacing between adjacent trees
+    property VSpace: Integer read FVSpace write FVSpace; // vertical spacing between node positions
+    property NodeSize: integer read FNodeSize write FNodeSize; // *half* the size of a node rectangle
+  end;
+
+function Compare(X, Y: Integer): TCompare;
+function MakeNode(AValue: Integer; ALeft, ARight: PNode): PNode;
+// pre: true
+// ret: pointer to a newly created TNode filled with the given parameter values
+
+
+
+implementation //===============================================================
+
+uses
+  Math, SysUtils, Types;
+{ TTree }
+
+{TV: auxiliary function on PNode-trees}
+
+function TTree.TreeHeight(ANode: PNode): Integer;
+  { pre: ANode points to a binary search tree with up-to-date layout info
+    ret: height of the tree in pixels }
+begin
+  if ANode = nil
+  then Result := 0
+  else Result := ANode^.FHeight
+end;
+
+function TTree.TreeWidth(ANode: PNode): Integer;
+  { pre: ANode points to a binary search tree with up-to-date layout info
+    ret: width of the tree in pixels }
+begin
+  if ANode = nil
+  then if FDrawEmptyTrees then Result := 2*NodeSize else Result := 0
+  else Result := ANode^.FWidth
+end;
+
+function TTree.TreeRootX(ANode: PNode): Integer;
+  { pre: ANode points to a binary search tree with up-to-date layout info
+    ret: relative X-coordinate of root }
+begin
+  if ANode = nil
+  then if FDrawEmptyTrees then Result := NodeSize else Result := 0
+  else Result := ANode^.FX
+end;
+
+function TTree.TreeRootY(ANode: PNode): Integer;
+  { pre: ANode points to a binary search tree with up-to-date layout info
+    ret: relative Y-coordinate of root }
+begin
+  if ANode = nil
+  then Result := 0
+  else Result := ANode^.FY
+end;
+
+procedure TTree.Add(AValue: Integer);
+begin
+  Insert(AValue, FRoot);
+end;
+
+procedure TTree.AuxCalc(ANode: PNode);
+begin
+{TODO}
+end;
+
+procedure TTree.CalculateLayout(DrawEmptyTrees: Boolean; RootPositionStyle: Integer);
+begin
+  FDrawEmptyTrees := DrawEmptyTrees;
+  FRootPositionStyle := RootPositionStyle;
+  if FRoot <> nil
+  then AuxCalc(FRoot);
+end;
+
+procedure TTree.Clear;
+begin
+  DisposeTree(FRoot);
+  FRoot := nil;
+end;
+
+function TTree.Count: Integer;
+begin
+  Result := CountNodes(FRoot);
+end;
+
+function TTree.CountNodes(ANode: PNode): Integer;
+// pre: ANode points to a binary search tree
+// ret: the number of nodes in that tree
+begin
+  if ANode = nil
+  then Result := 0
+  else Result := 1 + CountNodes(ANode^.FLeft) + CountNodes(ANode^.FRight);
+end;
+
+constructor TTree.Create;
+begin
+  inherited Create;
+  FRoot := nil;
+end;
+
+procedure TTree.Delete(AValue: Integer; var P: PNode);
+// See Lecture Notes BST2.doc
+var
+  Q: PNode; // Node to be deleted
+begin
+  if P = nil
+  then {skip}
+  else
+    case Compare(AValue, P^.FValue) of
+      ls: Delete(AValue, P^.FLeft);
+      gt: Delete(AValue, P^.FRight);
+      eq:
+        begin
+          if P^.FRight = nil then begin Q := P; P := P^.FLeft end
+          else if P^.FLeft = nil then begin Q := P; P := P^.FRight end
+          else
+            begin
+              DeleteRM(P^.FLeft, Q);
+              P^.FValue := Q^.FValue
+            end;
+          Dispose(Q)
+        end;
+    end{case}
+end;
+
+procedure TTree.DeleteRM(var R, S: PNode);
+// See lecture Notes BST2.doc
+// Make S refer to rightmost element of tree with root R;
+// Remove that element from the tree
+begin
+  if R^.FRight = nil
+  then begin S := R; R := S^.FLeft end
+  else DeleteRM(R^.FRight, S);
+end;
+
+destructor TTree.Destroy;
+begin
+  DisposeTree(FRoot);
+  inherited;
+end;
+
+procedure TTree.DisposeTree(ANode: PNode);
+// pre: ANode points to the root of a binary search tree
+// post: all nodes in the tree have ben disposed
+begin
+  if ANode <> nil then
+  begin
+    DisposeTree(ANode^.FLeft);
+    DisposeTree(ANode^.FRight);
+  end;
+  Dispose(ANode);
+end;
+
+procedure TTree.DrawBackGround(ACanvas: TCanvas);
+begin
+  with ACanvas do
+  begin
+    Brush.Color := clWhite;
+    FillRect(ClipRect);
+  end;
+end;
+
+procedure TTree.DrawTree(ANode: PNode; AX, AY: Integer; ACanvas: TCanvas);
+  { pre: AX, AY are absolute coordinates of upper left-hand corner of
+         the bounding box;
+         ANode points to a binary search tree with up-to-date layout info
+    post: ANode has been drawn on the canvas according to its layout info }
+var
+  VX, VY: Integer; { absolute coordinates of the root }
+  VSX, VSY: Integer; { absolute coordinates of the root of a subtree }
+  VRect: TRect; { rectangle for drawing the root }
+begin
+{TODO}
+end;
+
+procedure TTree.Draw(ACanvas: TCanvas; DrawBoundingBoxes: Boolean);
+begin
+  FDrawBoundingBoxes := DrawBoundingBoxes;
+  DrawBackground(ACanvas);
+  DrawTree(FRoot, 0, 0, ACanvas);
+end;
+
+function TTree.Find(AValue: Integer; ANode: PNode): PNode;
+// See Lecture Notes BST2.doc
+begin
+  if ANode = nil
+  then Result := nil
+  else
+    case Compare(AValue, ANode^.FValue) of
+      ls: Result := Find(AValue, ANode^.FLeft);
+      eq: Result := ANode;
+      gt: Result := Find(AValue, ANode^.FRight);
+    end{case};
+end;
+
+procedure TTree.Insert(AValue: Integer; var P: PNode);
+// See Lecture Notes BST2.doc
+begin
+  if P = nil
+  then P := MakeNode(AValue, nil, nil)
+  else
+    case Compare(AValue, P^.FValue) of
+      ls: Insert(AValue, P^.FLeft);
+      eq: {AValue already present; do not insert again};
+      gt: Insert(AValue, P^.FRight)
+    end{case};
+end;
+
+function TTree.Occurs(AValue: Integer): Boolean;
+begin
+  Result := Find(AValue, FRoot) <> nil;
+end;
+
+procedure TTree.Remove(AValue: Integer);
+begin
+  Delete(AValue, FRoot);
+end;
+
+function TTree.ToString: String;
+begin
+  Result := TreeToString(FRoot);
+end;
+
+function Compare(X, Y: Integer): TCompare;
+begin
+  if X < Y
+  then Result := ls
+  else if X = Y then Result := eq
+  else Result := gt;
+end;
+
+function MakeNode(AValue: Integer; ALeft, ARight: PNode): PNode;
+var
+  H: PNode;
+begin
+  New(H);
+  with H^ do
+  begin
+    FValue := AValue;
+    FLeft := ALeft;
+    FRight := ARight;
+    FHeight := 0;
+    FWidth := 0;
+    FX := 0;
+    FY := 0;
+  end{with};
+  Result := H;
+end;
+
+
+function TTree.Height: Integer;
+begin
+  if FRoot <> nil
+  then Result := FRoot^.FHeight
+  else Result := 0;
+end;
+
+function TTree.Width: Integer;
+begin
+  if FRoot <> nil
+  then Result := FRoot^.FWidth
+  else Result := 0;
+end;
+
+function TTree.TreeToString(ANode: PNode): String;
+begin
+  if FRoot = nil
+  then Result := ''
+  else Result := TreeToString(ANode^.FLeft) + '  ' + IntToStr(ANode^.FValue) +
+                   '  ' + TreeToString(ANode^.FRight);
+end;
+
+end.

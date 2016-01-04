@@ -1,0 +1,155 @@
+unit Converteer;
+
+// Auteur: Kees Hemerik
+// Laatst herzien op: 17-03-2005
+
+// Deze unit bevat een aantal procedures om getallen te converteren naar
+// een weergave in woorden.
+
+interface
+uses
+  SysUtils;
+
+procedure TG20(H: Integer; var S: String);
+{pre : 0 <= H < 20}
+{post: S = Tekst van getal H}
+
+procedure Tiental(H: Integer; var S: String);
+{pre : 2 <= H < 100}
+{post: S = Tekst van H-de tiental (twintig, dertig, ...)}
+
+procedure TG100(H: Integer; var S: String);
+{pre : 0 <= H < 100}
+{post: s = Tekst van getal H}
+
+procedure TG1000(H: Integer; var S: String);
+{pre : 0 <= H < 1000}
+{post: s = Tekst van getal H}
+
+procedure TG1000000(H: Integer; var S: String);
+{pre : 0 <= H < 1000000}
+{post: s = Tekst van getal H}
+
+procedure TekstVanBedrag(E, C: Integer; var S: String);
+{pre : 0 <= E < 1000000, 0 <= C < 100}
+{post: S = Tekstuele weergave van bedrag van E euro en C cent}
+
+implementation //===============================================================
+
+procedure TG20(H: Integer; var S: String);
+{pre : 0 <= H < 20}
+{post: S = Tekst van getal H}
+begin
+  case H of
+    0: S := 'nul';
+    1: S := 'een';
+    2: S := 'twee';
+    3: S := 'drie';
+    4: S := 'vier';
+    5: S := 'vijf';
+    6: S := 'zes';
+    7: S := 'zeven';
+    8: S := 'acht';
+    9: S := 'negen';
+   10: S := 'tien';
+   11: S := 'elf';
+   12: S := 'twaalf';
+   13: S := 'dertien';
+   14: S := 'veertien';
+   15: S := 'vijftien';
+   16: S := 'zestien';
+   17: S := 'zeventien';
+   18: S := 'achttien';
+   19: S := 'negentien'
+  end{case} 
+end;
+
+procedure Tiental(H: Integer; var S: String);
+{pre : 2 <= H < 100}
+{post: S = Tekst van H-de tiental}
+begin
+  case H of
+    2: S := 'twintig';
+    3: S := 'dertig';
+    4: S := 'veertig';
+    5: S := 'vijftig';
+    6: S := 'zestig';
+    7: S := 'zeventig';
+    8: S := 'tachtig';
+    9: S := 'negentig'
+  end{case}
+end;
+
+
+procedure TG100(H: Integer; var S: String);
+{pre : 0 <= H < 100}
+{post: S = Tekst van getal H}
+var
+  S1, S2: String;
+begin
+  if H < 20
+  then TG20(h, S)
+  else
+  begin
+    Tiental(H div 10, S1);
+    if (H mod 10) = 0
+    then S := S1
+    else
+    begin
+      TG20(H mod 10, S2);
+      S := S2 + 'en' + S1
+    end
+  end;
+end;
+
+procedure TG1000(H: Integer; var S: String);
+{pre : 0 <= H <1000}
+{post: S = Tekst van getal H}
+var
+  S1, S2: String;
+begin
+  if H < 100
+  then TG100(H, S)
+  else
+  begin
+    TG100(H div 100, S1);
+    if H mod 100 = 0
+    then S2 := ''
+    else TG100(H mod 100, S2);
+    S := S1 + 'honderd' + S2;
+  end;
+end;
+
+procedure TG1000000(h: Integer; var S: String);
+{pre : 0 <= h<1000000}
+{post: s = Tekst van getal h}
+var
+  S1, S2: String;
+begin
+  if H < 1000
+  then TG1000(H, S)
+  else
+  begin
+    TG1000(H div 1000, S1);
+    if H mod 1000 = 0
+    then S2 := ''
+    else TG1000(H mod 1000, S2);
+    S := S1 + 'duizend' + S2;
+  end;
+end;
+
+procedure TekstVanBedrag(E, C: Integer; var S: String);
+{pre : 0 <= E < 1000000, 0 <= C < 100}
+{post: S = Tekstuele weergave van bedrag van E euro en C cent}
+var
+  S1, S2: String;
+begin
+  TG1000000(E, S1);
+  TG100(C, S2);
+  S := S1 + ' Euro en ' + S2 + ' cent';
+end;
+
+
+
+end.
+ 

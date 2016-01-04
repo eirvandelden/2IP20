@@ -1,0 +1,7 @@
+[Main]
+kind=puzzle
+
+[Puzzle]
+name=simple puzzle
+pieces=SimplePieces.txt
+box=SimpleBox.txt

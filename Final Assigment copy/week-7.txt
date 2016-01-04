@@ -1,0 +1,81 @@
+Program Realization 2 (2IP20), 2006-2007
+======= =========== =
+
+The final assignment is done in three installments
+during weeks 7 through 9 of the term.
+
+First Installment: Basic Definitions
+----- -----------
+
+Goal: Become familiar with the framework that we provide.
+
+Material: Slides of Lecture 7, base-diagram.pdf, archive Puzzle2007_A.zip
+
+Plan: Review the slides, extend a puzzle definition, play with demo program,
+study the interface and design of Base.pas and PuzzleIO.pas, and
+fill in some missing parts of the software
+
+Step 1: Review the slides
+
+Check that you understand the program requirements, the formal model,
+and the format of the puzzle definition files.
+
+Step 2: Extend a puzzle definition 
+
+In directory Puzzles, you find the simple puzzle described in the slides.
+It has piece C restricted to a single orientation.
+
+Copy the three files Simple*.txt to My*.txt, and edit them to
+
+  *  add the three "missing" orientations of piece C;
+
+  *  add two copies of a new green piece D consisting of 3 cells inline,
+     include both the horizontal and the vertical orientation;
+     (piece multiplicity is indicated by the key 'multiplicity').
+
+  *  extend the box to a 4x4 square with a 2x2 hole in the middle.
+
+Step 3: Play with the demo
+
+The directory Demo contains a demo executable.  Note that the puzzle
+definitions files need to be in the same directory as the executable.
+
+Open your puzzle in the demo and check that your pieces look ok.
+Note that the demo places pieces A and B in the box in fixed locations.
+Hence, you cannot just open any puzzle with the demo.
+
+Step 4: Study the interface and design of Base.pas and PuzzleIO.pas
+
+The interfaces provide some specifications, often in the form of contracts.
+The UML diagram provides and overview of the data types and how
+they are related.  Study the relationship to the formal model.
+
+Step 5: Fill in some missing parts
+
+The source files Base.pas and PuzzleIO.pas are incomplete.
+They contain some holes marked by
+
+//# BEGIN TODO
+  Replace this line by your text.
+//# END TODO
+
+Complete the files according to the specification.
+Do not forget your name, id.nr., and the date at the top.
+Do not remove the //#-TODO markers themselves.
+
+When properly completed, your program should behave as the demo.
+
+
+Second Installment: User Interaction
+----- -----------
+
+To be supplied
+
+
+Third Installment: Automatic Solver
+----- -----------
+
+To be supplied
+
+
+(End)

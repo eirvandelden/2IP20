@@ -1,0 +1,377 @@
+<HTML><HEAD>
+<TITLE>File: Stack_Linked.pas</TITLE>
+<META NAME="GENERATOR" CONTENT="PasToWeb[Marco Cantù]">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<A NAME=STACK_LINKED.PAS><h1>Implement TAbsStack by Means of Linked List</h1>
+<h2>Steps</h2>
+<ul>
+	<li><font size="5">Inherit public interface from ancestor class; override 
+	abstract methods; add constructors and destructors;</font> 
+	</li>
+	<li><font size="5">Choose implementation strategy; introduce private and/or 
+	protected fields and methods;</font> 
+	</li>
+	<li><font size="5">Add contract for private/protected members; define 
+	representation relation;</font> 
+	</li>
+	<li><font size="5">Implement methods cf. contracts.</font> </li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p></A>
+
+<h2>Step 1: Inherit public interface and contract from ancestor; override 
+methods; add constructors and destructors;</h2>
+<PRE>
+
+<B>type</B>
+  TIntStack_Linked =
+  <B>class</B>(TIntStack)
+  <B>public</B>
+    <FONT COLOR="#000080"><I>// construction and destruction</I></FONT>
+    <B>constructor</B> Create;
+    <FONT COLOR="#000080"><I>// pre: true</I></FONT>
+    <FONT COLOR="#000080"><I>// post: Abstr = []</I></FONT>
+
+    <B>destructor</B> Destroy; <B>override</B>;
+
+    <FONT COLOR="#000080"><I>// queries ------------------------</I></FONT>
+    <B>function</B> Count: Integer; <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: true</I></FONT>
+    <FONT COLOR="#000080"><I>// ret: |Abstr|</I></FONT>
+
+    <B>function</B> Top: Integer; <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: not isEmpty, Abstr :: S ++ [X]</I></FONT>
+    <FONT COLOR="#000080"><I>// ret: X</I></FONT>
+
+    <B>function</B> IsEmpty: Boolean; <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: true</I></FONT>
+    <FONT COLOR="#000080"><I>// ret: Count = 0</I></FONT>
+
+    <FONT COLOR="#000080"><I>// commands -----------------------</I></FONT>
+    <B>procedure</B> Push(AValue: Integer); <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: Abstr = S</I></FONT>
+    <FONT COLOR="#000080"><I>// post: Abstr = S ++ [AValue]</I></FONT>
+
+    <B>procedure</B> Pop; <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: not IsEmpty, Abstr :: S ++ [X]</I></FONT>
+    <FONT COLOR="#000080"><I>// post: Abstr = S</I></FONT>
+
+    <FONT COLOR="#000080"><I>// model variables ----------------</I></FONT>
+    <FONT COLOR="#000080"><I>// Abstr: sequence of Integer</I></FONT>
+
+    <FONT COLOR="#000080"><I>// public invariants --------------</I></FONT>
+    <FONT COLOR="#000080"><I>// none</I></FONT>
+  <B>end</B>;
+</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<h2>
+Step 2: Choose implementation strategy; add private/protected fields and 
+methods;</h2>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+<B>type</B>
+  PCell = ^TCell;
+  TCell =
+  <B>record</B>
+    FVal: Integer;
+    FNext: PCell;
+  <B>end</B>;
+
+<B>type</B>
+  TIntStack_Linked =
+  <B>class</B>(TIntStack)
+  <B>protected</B>
+    FList: PCell;    <FONT COLOR="#000080"><I>// points to first cell (containing the top value), if any</I></FONT>
+    FCount: Integer; <FONT COLOR="#000080"><I>// number of cells in linked list</I></FONT>
+
+    <FONT COLOR="#000080"><I>// auxiliary procedures -----------</I></FONT>
+    <B>procedure</B> DisposeList;
+
+  <B>public</B>
+</PRE>
+<PRE>
+    <span style="background-color: #FFFF00">...</span></PRE>
+<PRE>
+  <B>end</B>;
+</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<h2>
+<font size="5">Step 3:Add contract for private/protected members; define 
+representation relation;</font> </h2>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+
+
+<B>type</B>
+  TIntStack_Linked =
+  <B>class</B>(TIntStack)
+  <B>protected</B>
+    FList: PCell;    <FONT COLOR="#000080"><I>// points to first cell (containing the top value), if any</I></FONT>
+    FCount: Integer; <FONT COLOR="#000080"><I>// number of cells in linked list</I></FONT>
+
+    <FONT COLOR="#000080"><I>// auxiliary procedures -----------</I></FONT>
+    <B>procedure</B> DisposeList;
+    <FONT COLOR="#000080"><I>// pre: FList -&gt; C1 -&gt; ... -&gt; Cn</I></FONT>
+    <FONT COLOR="#000080"><I>// post: C1,...,Cn have been disposed;</I></FONT>
+
+    <FONT COLOR="#000080"><I>// protected invariants -----------</I></FONT>
+    <FONT COLOR="#000080"><I>// FList(^.FNext)^^FCount = nil , where (A)^^B stands for B repetitions of A</I></FONT>
+    <FONT COLOR="#000080"><I>// N.B. in particular, if FCount = 0, then FList = nil</I></FONT>
+
+    <FONT COLOR="#000080"><I>// representation -----------------</I></FONT>
+    <FONT COLOR="#000080"><I>// Abstr = [FList(^.FNext)^^(FCount-1).FVal, ..., FList^.FVal]</I></FONT>
+    <FONT COLOR="#000080"><I>// N.B. in particular, if FCount = 0, then Abstr = []</I></FONT>
+
+  <B>public</B>
+</PRE>
+<PRE>
+    <span style="background-color: #FFFF00">...</span></PRE>
+<PRE>
+  <B>end</B>;
+</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+&nbsp;</PRE>
+<h2>
+Step 4: Implement methods conform contracts</h2>
+<PRE>
+&nbsp;</PRE>
+<PRE>
+<B>unit</B> Stack_Linked;
+
+<B>interface</B>
+
+<B>uses</B>
+  AbsStack;
+
+  <FONT COLOR="#000080"><I>//----------------------------------------------------------------------------</I></FONT>
+  <FONT COLOR="#000080"><I>//  Class TIntStack_Linked implements the abstract class by means of a single-</I></FONT>
+  <FONT COLOR="#000080"><I>//  linked list.</I></FONT>
+  <FONT COLOR="#000080"><I>//</I></FONT>
+  <FONT COLOR="#000080"><I>//  FList points to the first cell (containing the top value), if any</I></FONT>
+  <FONT COLOR="#000080"><I>//  FCount maintains the number of cells in the linked list.</I></FONT>
+  <FONT COLOR="#000080"><I>//----------------------------------------------------------------------------</I></FONT>
+
+<B>type</B>
+  PCell = ^TCell;
+  TCell =
+  <B>record</B>
+    FVal: Integer;
+    FNext: PCell;
+  <B>end</B>;
+
+<B>type</B>
+  TIntStack_Linked =
+  <B>class</B>(TIntStack)
+  <B>protected</B>
+    FList: PCell;    <FONT COLOR="#000080"><I>// points to first cell (containing the top value), if any</I></FONT>
+    FCount: Integer; <FONT COLOR="#000080"><I>// number of cells in linked list</I></FONT>
+
+    <FONT COLOR="#000080"><I>// auxiliary procedures -----------</I></FONT>
+    <B>procedure</B> DisposeList;
+    <FONT COLOR="#000080"><I>// pre: FList -&gt; C1 -&gt; ... -&gt; Cn</I></FONT>
+    <FONT COLOR="#000080"><I>// post: C1,...,Cn have been disposed;</I></FONT>
+
+    <FONT COLOR="#000080"><I>// protected invariants -----------</I></FONT>
+    <FONT COLOR="#000080"><I>// FList(^.FNext)^^FCount = nil , where (A)^^B stands for B repetitions of A</I></FONT>
+    <FONT COLOR="#000080"><I>// N.B. in particular, if FCount = 0, then FList = nil</I></FONT>
+
+    <FONT COLOR="#000080"><I>// representation -----------------</I></FONT>
+    <FONT COLOR="#000080"><I>// Abstr = [FList(^.FNext)^^(FCount-1).FVal, ..., FList^.FVal]</I></FONT>
+    <FONT COLOR="#000080"><I>// N.B. in particular, if FCount = 0, then Abstr = []</I></FONT>
+
+  <B>public</B>
+    <FONT COLOR="#000080"><I>// construction and destruction</I></FONT>
+    <B>constructor</B> Create;
+    <FONT COLOR="#000080"><I>// pre: true</I></FONT>
+    <FONT COLOR="#000080"><I>// post: Abstr = []</I></FONT>
+
+    <B>destructor</B> Destroy; <B>override</B>;
+
+    <FONT COLOR="#000080"><I>// queries ------------------------</I></FONT>
+    <B>function</B> Count: Integer; <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: true</I></FONT>
+    <FONT COLOR="#000080"><I>// ret: |Abstr|</I></FONT>
+
+    <B>function</B> Top: Integer; <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: not isEmpty, Abstr :: S ++ [X]</I></FONT>
+    <FONT COLOR="#000080"><I>// ret: X</I></FONT>
+
+    <B>function</B> IsEmpty: Boolean; <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: true</I></FONT>
+    <FONT COLOR="#000080"><I>// ret: Count = 0</I></FONT>
+
+    <FONT COLOR="#000080"><I>// commands -----------------------</I></FONT>
+    <B>procedure</B> Push(AValue: Integer); <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: Abstr = S</I></FONT>
+    <FONT COLOR="#000080"><I>// post: Abstr = S ++ [AValue]</I></FONT>
+
+    <B>procedure</B> Pop; <B>override</B>;
+    <FONT COLOR="#000080"><I>// pre: not IsEmpty, Abstr :: S ++ [X]</I></FONT>
+    <FONT COLOR="#000080"><I>// post: Abstr = S</I></FONT>
+
+    <FONT COLOR="#000080"><I>// model variables ----------------</I></FONT>
+    <FONT COLOR="#000080"><I>// Abstr: sequence of Integer</I></FONT>
+
+    <FONT COLOR="#000080"><I>// public invariants --------------</I></FONT>
+    <FONT COLOR="#000080"><I>// none</I></FONT>
+  <B>end</B>;
+
+<B>function</B> IntStackLinkedExternally(AStack: TIntStack_Linked): <B>String</B>;
+
+
+<B>implementation</B> <FONT COLOR="#000080"><I>//===============================================================</I></FONT>
+
+<B>uses</B>
+  SysUtils; <FONT COLOR="#000080"><I>// for Format function</I></FONT>
+
+<FONT COLOR="#000080"><I>{ TIntStack_Linked }</I></FONT>
+
+<B>function</B> TIntStack_Linked.Count: Integer;
+<B>begin</B>
+  Result := FCount;
+<B>end</B>;
+
+<B>constructor</B> TIntStack_Linked.Create;
+<B>begin</B>
+  <B>inherited</B> Create;
+  FList := <B>nil</B>;
+  FCount := 0;
+<B>end</B>;
+
+<B>destructor</B> TIntStack_Linked.Destroy;
+<B>begin</B>
+  DisposeList;
+  <B>inherited</B> Destroy;
+<B>end</B>;
+
+<B>procedure</B> TIntStack_Linked.DisposeList;
+<B>var</B>
+  P, H: PCell;
+<B>begin</B>
+  P := FList;
+  <B>while</B> P &lt;&gt; <B>nil</B> <B>do</B>
+  <B>begin</B>
+    H := P;
+    P := P^.FNext;
+    Dispose(H);
+  <B>end</B>;
+<B>end</B>;
+
+<B>function</B> TIntStack_Linked.IsEmpty: Boolean;
+<B>begin</B>
+  Result := FCount = 0;
+<B>end</B>;
+
+<B>procedure</B> TIntStack_Linked.Pop;
+<B>var</B>
+  H: Pcell;
+<B>begin</B>
+  Assert( <B>not</B> IsEmpty, 'TIntStack_Linked.Pop.pre failed');
+  H := FList;
+  FList := FList^.FNext;
+  Dispose(H);
+  FCount := FCount - 1;
+<B>end</B>;
+
+<B>procedure</B> TIntStack_Linked.Push(AValue: Integer);
+<B>var</B>
+  H: PCell;
+<B>begin</B>
+  New(H);
+  H^.FVal := AValue;
+  H^.FNext := FList;
+  FList := H;
+  FCount := FCount + 1;
+<B>end</B>;
+
+<B>function</B> TIntStack_Linked.Top: Integer;
+<B>begin</B>
+  Assert( <B>not</B> IsEmpty, 'TIntStack_Linked.Pop.pre failed');
+  Result := FList^.FVal;
+<B>end</B>;
+
+<B>function</B> IntStackLinkedExternally(AStack: TIntStack_Linked): <B>String</B>;
+<B>var</B>
+  H: PCell;
+<B>begin</B>
+  <FONT COLOR="#000080"><I>// N.B.: stack is shown with top on the right</I></FONT>
+  <B>with</B> AStack <B>do</B>
+  <B>begin</B>
+    H := FList;
+    Result := ']';
+    <B>while</B> H &lt;&gt; <B>nil</B> <B>do</B>
+    <B>begin</B>
+      Result := Format('%3d',[ H^.FVal ]) + Result;
+      H := H^.FNext;
+    <B>end</B>;
+    Result := '[' + Result;
+  <B>end</B><FONT COLOR="#000080"><I>{with}</I></FONT>
+<B>end</B>;
+
+
+<B>end</B>.</PRE><HR><CENTER<I>Generated by PasToWeb, a tool by Marco Cant&ugrave;.<P>
+Copyright 1997 ...</CENTER></I>
+</BODY> </HTML>

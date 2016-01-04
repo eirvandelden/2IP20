@@ -1,0 +1,157 @@
+unit main; 
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  Buttons, converteer;
+  
+const
+     Digit = ['0' .. '9'];
+
+
+
+
+type
+
+  { TMainForm }
+
+  TMainForm = class(TForm)
+    cmb_convert: TButton;
+    EditResultaat: TEdit;
+    EditCenten: TEdit;
+    EditEuro: TEdit;
+    Label1: TLabel;
+    LabelEuro: TLabel;
+    procedure EditCentenChange(Sender: TObject);
+    procedure EditEuroChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Label1Click(Sender: TObject);
+    procedure LabelEuroClick(Sender: TObject);
+    procedure cmb_convertClick(Sender: TObject);
+  private
+    { private declarations }
+  public
+    { public declarations }
+    function ValidEuro: Boolean;
+    function ValidCent: Boolean;
+	function ValidBedrag: Boolean;
+    
+  end; 
+
+var
+  MainForm: TMainForm;
+
+implementation
+
+{ TMainForm }
+
+function TMainform.ValidEuro: Boolean;
+{ pre: true
+  retL 1<-Lenght(S) /\ (forall i:1<=i<=Lenght(S). S[i] in Digit),
+       waarin S=EditEuro.text
+ }
+ 
+ var
+    S: String;
+    I: Integer;
+ begin
+      S := EditEuro.Text;
+      Result := (1 <= Length(S)) and (Length(S) <= 6);
+      if Result then
+         for I := 1 to Length(S) do
+             Result := Result and (S[I] in Digit);
+ end;
+
+function TMainForm.ValidCent: Boolean;
+      { pre : true
+        ret : Length(S) = 2) /\ (S[1] in Digit) /\ (S[2] in Digit),
+              waarin S=EditCent.text
+	}
+      var
+        S: String;
+      begin
+        S := EditCenten.Text;
+        Result := (Length(S) = 2) and (S[1] in Digit) and
+                  (S[2] in Digit);
+      end;
+
+function TMainForm.ValidBedrag: Boolean;
+      { pre: true
+        ret: ValidEuro /\ ValidCent
+	}
+      begin
+        Result := ValidEuro and ValidCent;
+      end;
+
+procedure TMainForm.EditEuroChange(Sender: TObject);
+
+var S: ShortString;
+begin
+   if  ValidBedrag then
+   begin
+          cmb_convert.Enabled := true;
+          S := ' ';
+          TekstVanBedrag( StrToInt(EditEuro.Text), StrToInt(EditCenten.Text), S );
+          EditResultaat.Text := S;
+     end;
+       else cmb_convert.Enabled := false;
+       
+end;
+
+procedure TMainForm.EditCentenChange(Sender: TObject);
+var S: ShortString;
+
+begin
+     if  ValidBedrag then
+     begin
+          cmb_convert.Enabled := true;
+          S:= ' ';
+          TekstVanBedrag( StrToInt(EditEuro.Text), StrToInt(EditCenten.Text), S );
+          EditResultaat.Text := S;
+     end
+     else cmb_convert.Enabled := false;
+
+
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  cmb_convert.Enabled := false;
+end;
+
+procedure TMainForm.Label1Click(Sender: TObject);
+begin
+
+end;
+
+procedure TMainForm.LabelEuroClick(Sender: TObject);
+begin
+
+end;
+
+procedure TMainForm.cmb_convertClick(Sender: TObject);
+var
+   S: ShortString;
+
+
+
+begin
+
+     S:= '';
+   TekstVanBedrag( StrToInt(EditEuro.Text), StrToInt(EditCenten.Text), S );
+   EditResultaat.Text := S;
+   
+end;
+
+
+
+initialization
+  {$I main.lrs}
+
+
+
+end.
+

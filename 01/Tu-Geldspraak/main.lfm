@@ -1,0 +1,67 @@
+object MainForm: TMainForm
+  Left = 784
+  Height = 126
+  Top = 437
+  Width = 388
+  HorzScrollBar.Page = 387
+  VertScrollBar.Page = 125
+  ActiveControl = EditEuro
+  Caption = 'MainForm'
+  OnCreate = FormCreate
+  object LabelEuro: TLabel
+    Left = 16
+    Height = 13
+    Top = 16
+    Width = 36
+    Caption = '&Euro'
+    Color = clNone
+    FocusControl = EditEuro
+    ParentColor = False
+    OnClick = LabelEuroClick
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 13
+    Top = 56
+    Width = 50
+    Caption = '&Centen'
+    Color = clNone
+    FocusControl = EditCenten
+    ParentColor = False
+    OnClick = Label1Click
+  end
+  object EditEuro: TEdit
+    Left = 64
+    Height = 23
+    Top = 8
+    Width = 80
+    OnChange = EditEuroChange
+    TabOrder = 0
+  end
+  object EditCenten: TEdit
+    Left = 64
+    Height = 23
+    Top = 48
+    Width = 80
+    OnChange = EditCentenChange
+    TabOrder = 1
+  end
+  object cmb_convert: TButton
+    Left = 128
+    Height = 25
+    Top = 88
+    Width = 75
+    BorderSpacing.InnerBorder = 4
+    Caption = '&Converteer'
+    OnClick = cmb_convertClick
+    TabOrder = 3
+  end
+  object EditResultaat: TEdit
+    Left = 168
+    Height = 64
+    Top = 8
+    Width = 208
+    ReadOnly = True
+    TabOrder = 2
+  end
+end

@@ -1,0 +1,141 @@
+object Form1: TForm1
+  Left = 118
+  Top = 129
+  Width = 952
+  Height = 656
+  Caption = 'Form1'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 120
+  TextHeight = 16
+  object Image1: TImage
+    Left = 0
+    Top = 0
+    Width = 759
+    Height = 616
+    Align = alClient
+    AutoSize = True
+    OnMouseDown = Image1MouseDown
+  end
+  object Panel1: TPanel
+    Left = 759
+    Top = 0
+    Width = 185
+    Height = 616
+    Align = alRight
+    TabOrder = 0
+    object NewRectangleButton: TButton
+      Left = 56
+      Top = 88
+      Width = 105
+      Height = 25
+      Caption = 'New Rectangle'
+      TabOrder = 0
+      OnClick = NewRectangleButtonClick
+    end
+    object NewListButton: TButton
+      Left = 56
+      Top = 144
+      Width = 105
+      Height = 25
+      Caption = 'New List'
+      TabOrder = 1
+      OnClick = NewListButtonClick
+    end
+    object XLEdit: TEdit
+      Left = 96
+      Top = 216
+      Width = 65
+      Height = 24
+      ReadOnly = True
+      TabOrder = 2
+    end
+    object StaticText1: TStaticText
+      Left = 64
+      Top = 216
+      Width = 19
+      Height = 20
+      Caption = 'XL'
+      TabOrder = 3
+    end
+    object YLEdit: TEdit
+      Left = 96
+      Top = 264
+      Width = 65
+      Height = 24
+      ReadOnly = True
+      TabOrder = 4
+    end
+    object XHEdit: TEdit
+      Left = 96
+      Top = 312
+      Width = 65
+      Height = 24
+      ReadOnly = True
+      TabOrder = 5
+    end
+    object YHEdit: TEdit
+      Left = 96
+      Top = 360
+      Width = 65
+      Height = 24
+      ReadOnly = True
+      TabOrder = 6
+    end
+    object StaticText2: TStaticText
+      Left = 64
+      Top = 264
+      Width = 20
+      Height = 20
+      Caption = 'YL'
+      TabOrder = 7
+    end
+    object StaticText3: TStaticText
+      Left = 64
+      Top = 312
+      Width = 22
+      Height = 20
+      Caption = 'XH'
+      TabOrder = 8
+    end
+    object StaticText4: TStaticText
+      Left = 64
+      Top = 360
+      Width = 23
+      Height = 20
+      Caption = 'YH'
+      TabOrder = 9
+    end
+    object CountEdit: TEdit
+      Left = 96
+      Top = 456
+      Width = 65
+      Height = 24
+      ReadOnly = True
+      TabOrder = 10
+    end
+    object StaticText5: TStaticText
+      Left = 48
+      Top = 456
+      Width = 38
+      Height = 20
+      Caption = 'Count'
+      TabOrder = 11
+    end
+    object ClearButton: TButton
+      Left = 56
+      Top = 32
+      Width = 97
+      Height = 25
+      Caption = 'Clear'
+      TabOrder = 12
+      OnClick = ClearButtonClick
+    end
+  end
+end

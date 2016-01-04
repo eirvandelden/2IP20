@@ -1,0 +1,83 @@
+object Form1: TForm1
+  Left = 192
+  Top = 144
+  Width = 420
+  Height = 240
+  HorzScrollBar.Range = 237
+  VertScrollBar.Range = 69
+  Caption = 'Image Viewer'
+  Color = clButton
+  Constraints.MinHeight = 240
+  Constraints.MinWidth = 420
+  Font.Color = clText
+  Font.Height = 11
+  Font.Name = 'MS Sans Serif'
+  Font.Pitch = fpVariable
+  Font.Style = []
+  Font.Weight = 40
+  ParentFont = False
+  Scaled = False
+  PixelsPerInch = 96
+  object imgLoadedImg: TImage
+    Left = 248
+    Top = 8
+    Width = 162
+    Height = 223
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    OnDragDrop = imgLoadedImgDragDrop
+    OnDragOver = imgLoadedImgDragOver
+  end
+  object Label1: TLabel
+    Left = 8
+    Top = 56
+    Width = 98
+    Height = 13
+    Caption = '&Available image files:'
+    FocusControl = lstImages
+  end
+  object Label2: TLabel
+    Left = 8
+    Top = 8
+    Width = 56
+    Height = 13
+    Caption = '&Image path:'
+    FocusControl = edtPath
+  end
+  object edtPath: TEdit
+    Left = 8
+    Top = 24
+    Width = 207
+    Height = 21
+    TabOrder = 0
+    OnChange = edtPathChange
+  end
+  object btnGetPath: TButton
+    Left = 216
+    Top = 24
+    Width = 21
+    Height = 21
+    Caption = '...'
+    Font.CharSet = fcsLatin1
+    Font.Color = clText
+    Font.Height = 13
+    Font.Name = 'Arial'
+    Font.Pitch = fpVariable
+    Font.Style = []
+    Font.Weight = 40
+    ParentFont = False
+    TabOrder = 1
+    OnClick = btnGetPathClick
+  end
+  object lstImages: TListBox
+    Left = 8
+    Top = 72
+    Width = 225
+    Height = 159
+    Anchors = [akLeft, akTop, akBottom]
+    ItemHeight = 13
+    Sorted = True
+    TabOrder = 2
+    OnDblClick = lstImagesDblClick
+    OnMouseDown = lstImagesMouseDown
+  end
+end

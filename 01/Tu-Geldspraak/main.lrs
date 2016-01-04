@@ -1,0 +1,21 @@
+{ This is an automatically generated lazarus resource file }
+
+LazarusResources.Add('TMainForm','FORMDATA',[
+  'TPF0'#9'TMainForm'#8'MainForm'#4'Left'#3#16#3#6'Height'#2'~'#3'Top'#3#181#1#5
+  +'Width'#3#132#1#18'HorzScrollBar.Page'#3#131#1#18'VertScrollBar.Page'#2'}'#13
+  +'ActiveControl'#7#8'EditEuro'#7'Caption'#6#8'MainForm'#8'OnCreate'#7#10'Form'
+  +'Create'#0#6'TLabel'#9'LabelEuro'#4'Left'#2#16#6'Height'#2#13#3'Top'#2#16#5
+  +'Width'#2'$'#7'Caption'#6#5'&Euro'#5'Color'#7#6'clNone'#12'FocusControl'#7#8
+  +'EditEuro'#11'ParentColor'#8#7'OnClick'#7#14'LabelEuroClick'#0#0#6'TLabel'#6
+  +'Label1'#4'Left'#2#16#6'Height'#2#13#3'Top'#2'8'#5'Width'#2'2'#7'Caption'#6#7
+  +'&Centen'#5'Color'#7#6'clNone'#12'FocusControl'#7#10'EditCenten'#11'ParentCo'
+  +'lor'#8#7'OnClick'#7#11'Label1Click'#0#0#5'TEdit'#8'EditEuro'#4'Left'#2'@'#6
+  +'Height'#2#23#3'Top'#2#8#5'Width'#2'P'#8'OnChange'#7#14'EditEuroChange'#8'Ta'
+  +'bOrder'#2#0#0#0#5'TEdit'#10'EditCenten'#4'Left'#2'@'#6'Height'#2#23#3'Top'#2
+  +'0'#5'Width'#2'P'#8'OnChange'#7#16'EditCentenChange'#8'TabOrder'#2#1#0#0#7'T'
+  +'Button'#11'cmb_convert'#4'Left'#3#128#0#6'Height'#2#25#3'Top'#2'X'#5'Width'
+  +#2'K'#25'BorderSpacing.InnerBorder'#2#4#7'Caption'#6#11'&Converteer'#7'OnCli'
+  +'ck'#7#16'cmb_convertClick'#8'TabOrder'#2#3#0#0#5'TEdit'#13'EditResultaat'#4
+  +'Left'#3#168#0#6'Height'#2'@'#3'Top'#2#8#5'Width'#3#208#0#8'ReadOnly'#9#8'Ta'
+  +'bOrder'#2#2#0#0#0
+]);
